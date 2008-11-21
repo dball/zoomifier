@@ -11,3 +11,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+   The Zoomify flash player is Copyright 2007 Zoomify Inc. and is
+   redistributable subject to the terms of its license, see 
+   public/flash/LICENSE.txt for more details.
