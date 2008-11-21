@@ -1,7 +1,8 @@
 require 'fileutils'
 require 'open-uri'
 require 'rexml/document'
-require_gem 'rmagick'
+require 'rubygems'
+require 'rmagick'
 
 # Breaks up images into tiles suitable for viewing with Zoomify.
 # See http://zoomify.com/ for more details.
