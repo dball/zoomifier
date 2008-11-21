@@ -31,7 +31,7 @@ module Zoomifier
   # zoomified into a directory named 5. If there is already a directory with
   # this name, it will be destroyed without mercy.
   def self.zoomify(filename)
-    raise ArgumentError unless File.exists?(filename) && File.file?(filename)
+    raise ArgumentError unless filename && File.file?(filename)
     #filename = File.expand_path(filename)
     outputdir = File.dirname(filename) + '/' + File.basename(filename, '.*')
     raise ArgumentError unless filename != outputdir
