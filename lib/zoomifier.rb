@@ -1,6 +1,5 @@
 require 'fileutils'
 require 'open-uri'
-require 'rexml/document'
 require 'rubygems'
 require 'rmagick'
 
@@ -172,4 +171,12 @@ module Zoomifier
     nil
   end 
   
+end
+
+if __FILE__ == $0
+  if ARGV.length == 1
+    Zoomifier::zoomify(ARGV[0])
+  else
+    puts "Usage: zoomify filename"
+  end
 end
