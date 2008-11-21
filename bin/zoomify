@@ -1,0 +1,2 @@
+require 'zoomifier'
+Zoomifier::zoomify(ARGV[0])
