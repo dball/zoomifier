@@ -33,7 +33,8 @@ module Zoomifier
   # this name, it will be destroyed without mercy.
   def self.zoomify(filename)
     raise ArgumentError unless File.exists?(filename) && File.file?(filename)
-    outputdir = File.basename(filename, '.*')
+    #filename = File.expand_path(filename)
+    outputdir = File.dirname(filename) + '/' + File.basename(filename, '.*')
     raise ArgumentError unless filename != outputdir
     FileUtils.rm_rf(outputdir) if File.exists?(outputdir)
     Dir.mkdir(outputdir)
