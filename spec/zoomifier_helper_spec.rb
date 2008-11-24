@@ -16,7 +16,7 @@ describe Zoomifier::ViewHelpers do
   end
 
   it "should generate the zoomify markup" do
-    @view.zoomify_image_tag('foo.jpg', { :id => 'foo' }).should ==
-      '<div id="foo"><img src="foo.jpg" alt=""/></div>'
+    @view.zoomify_image_tag('foo.jpg', { :id => 'foo', :alt => 'Foo Bar' }).should ==
+      '<div id="foo"><img alt="Foo Bar" src="/images/foo.jpg" /></div>'
   end
 end
