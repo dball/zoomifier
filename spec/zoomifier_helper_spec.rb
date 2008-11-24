@@ -15,6 +15,10 @@ describe Zoomifier::ViewHelpers do
     @view.should respond_to(:zoomify_image_tag)
   end
 
+  it "should register swfobject.js as a default javascript library" do
+    @view.javascript_include_tag(:defaults).match(/"\/javascripts\/swfobject.js"/).should_not be_nil
+  end
+
   it "should generate the zoomify markup" do
     @view.zoomify_image_tag('foo.jpg', { :id => 'foo', :alt => 'Foo Bar', :width => 800, :height => 500 }).should ==
       '<div id="foo"><img alt="Foo Bar" height="500" src="/images/foo.jpg" width="800" /></div>' +
