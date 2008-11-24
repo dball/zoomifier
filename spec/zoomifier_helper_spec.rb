@@ -2,7 +2,21 @@ require File.dirname(__FILE__) + '/spec_helper'
 require File.dirname(__FILE__) + '/../../../../config/environment'
 require 'zoomifier_helper'
 
-describe Zoomifier::ViewHelpers do
+describe Zoomifier::ViewHelpers, "when installed into a rails app" do
+  before(:all) do
+    load File.dirname(__FILE__) + '/../install.rb'
+  end
+
+  it "should have copied the zoomify viewer" do
+    File.file?(File.dirname(__FILE__) + '/../../../../public/swfs/zoomifyViewer.swf').should be_true
+  end
+
+  it "should have copied the swfobject library" do
+    File.file?(File.dirname(__FILE__) + '/../../../../public/javascripts/swfobject.js').should be_true
+  end
+end
+
+describe Zoomifier::ViewHelpers, "when included into ActionView" do
   before(:all) do
     ActionView::Base.send :include, Zoomifier::ViewHelpers
   end
@@ -16,7 +30,7 @@ describe Zoomifier::ViewHelpers do
   end
 
   it "should register swfobject.js as a default javascript library" do
-    @view.javascript_include_tag(:defaults).match(/"\/javascripts\/swfobject.js"/).should_not be_nil
+    @view.javascript_include_tag(:defaults).match(/"\/javascripts\/swfobject.js/).should_not be_nil
   end
 
   it "should generate the zoomify markup" do
