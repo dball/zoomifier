@@ -6,14 +6,8 @@ describe Zoomifier do
     Zoomifier.should respond_to(:zoomify)
   end
 
-  describe "On a 1024x768 JPEG file" do
+  describe "all images", :shared => true do
     before(:all) do
-      @input = File.dirname(__FILE__) + '/data/1024x768.jpg'
-      @output = File.dirname(__FILE__) + '/data/1024x768/'
-      @tiles = %w[0-0-0.jpg 1-1-1.jpg 2-1-0.jpg 2-2-1.jpg 2-3-2.jpg
-                  1-0-0.jpg 2-0-0.jpg 2-1-1.jpg 2-2-2.jpg
-                  1-0-1.jpg 2-0-1.jpg 2-1-2.jpg 2-3-0.jpg
-                  1-1-0.jpg 2-0-2.jpg 2-2-0.jpg 2-3-1.jpg]
       FileUtils.rm_rf(@output)
       Zoomifier::zoomify(@input)
     end
@@ -27,40 +21,53 @@ describe Zoomifier do
     end
 
     it "should create the image properties file" do
-      File.file?(@output + '/ImageProperties.xml').should be_true
+      File.file?(@output + 'ImageProperties.xml').should be_true
     end
 
-    it "should create a tile group directory" do
-      File.directory?(@output + '/TileGroup0/').should be_true
+    it "should create the tiles" do
+      tiles = Dir.glob(@output + 'TileGroup*/*.jpg')
+      tiles.sort.should == @tiles.map {|file| @output + file }.sort
     end
 
-    it "should create the tiled images" do
-      tile_images = Dir.entries(@output + '/TileGroup0/').reject {|f| f.match(/^\./)}
-      tile_images.sort.should == @tiles.sort
-      tile_images.each do |file|
-        image = Magick::Image.read(@output + '/TileGroup0/' + file).first
+    it "should create tiles of 256x256 or less" do
+      @tiles.each do |file|
+        image = Magick::Image.read(@output + file).first
         image.rows.should <= 256
         image.columns.should <= 256
       end
     end
 
     it "should not recreate the tiles if the image date precedes them" do
-      old_timestamps = timestamps(@output)
+      old_timestamps = timestamps
       sleep(1)
       Zoomifier::zoomify(@input)
-      new_timestamps = timestamps(@output)
-      old_timestamps.should == new_timestamps
+      old_timestamps.should == timestamps
     end
 
-    def timestamps(dir)
+    def timestamps
       timestamps = {}
-      ['/ImageProperties.xml', '/TileGroup0/*.jpg'].each do |pattern|
-        Dir.glob(dir + pattern) do |filename|
+      ['ImageProperties.xml', 'TileGroup*/*.jpg'].each do |pattern|
+        Dir.glob(@output + pattern) do |filename|
           timestamps[filename] = File.mtime(filename)
         end
       end
       timestamps
     end
+  end
+
+  describe "On a 1024x768 JPEG file" do
+    before(:all) do
+      @input = File.dirname(__FILE__) + '/data/1024x768.jpg'
+      @output = File.dirname(__FILE__) + '/data/1024x768/'
+      @tiles = %w[0-0-0.jpg 1-1-1.jpg 2-1-0.jpg 2-2-1.jpg 2-3-2.jpg
+                  1-0-0.jpg 2-0-0.jpg 2-1-1.jpg 2-2-2.jpg
+                  1-0-1.jpg 2-0-1.jpg 2-1-2.jpg 2-3-0.jpg
+                  1-1-0.jpg 2-0-2.jpg 2-2-0.jpg 2-3-1.jpg].map do |file|
+                    'TileGroup0/' + file
+                  end
+    end
+
+    it_should_behave_like "all images"
   end
 
   describe "On a 2973x2159 JPEG file" do
@@ -98,35 +105,11 @@ describe Zoomifier do
       3-2-3.jpg 4-1-5.jpg   4-3-0.jpg   4-6-4.jpg   4-9-8.jpg
       3-2-4.jpg 4-1-6.jpg   4-3-1.jpg   4-6-5.jpg
       3-3-0.jpg 4-1-7.jpg   4-3-2.jpg   4-6-6.jpg
-      3-3-1.jpg 4-1-8.jpg   4-3-3.jpg   4-6-7.jpg]
-      FileUtils.rm_rf(@output)
-      Zoomifier::zoomify(@input)
-    end
-
-    after(:all) do
-      FileUtils.rm_rf(@output)
-    end
-
-    it "should create the output directory" do
-      File.directory?(@output).should be_true
-    end
-
-    it "should create the image properties file" do
-      File.file?(@output + '/ImageProperties.xml').should be_true
-    end
-
-    it "should create a tile group directory" do
-      File.directory?(@output + '/TileGroup0/').should be_true
-    end
-
-    it "should create the tiled images" do
-      tile_images = Dir.entries(@output + '/TileGroup0/').reject {|f| f.match(/^\./)}
-      tile_images.sort.should == @tiles.sort
-      tile_images.each do |file|
-        image = Magick::Image.read(@output + '/TileGroup0/' + file).first
-        image.rows.should <= 256
-        image.columns.should <= 256
+      3-3-1.jpg 4-1-8.jpg   4-3-3.jpg   4-6-7.jpg].map do |file|
+        'TileGroup0/' + file
       end
     end
+
+    it_should_behave_like "all images"
   end
 end
