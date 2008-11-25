@@ -35,6 +35,9 @@ module Zoomifier
     #filename = File.expand_path(filename)
     outputdir = File.dirname(filename) + '/' + File.basename(filename, '.*')
     raise ArgumentError unless filename != outputdir
+    if File.directory?(outputdir) && File.file?(outputdir + '/ImageProperties.xml') && File.mtime(filename) <= File.mtime(outputdir + '/ImageProperties.xml')
+      return
+    end
     FileUtils.rm_rf(outputdir) if File.exists?(outputdir)
     Dir.mkdir(outputdir)
     tmpdir = "#{outputdir}/tmp"
