@@ -43,6 +43,24 @@ describe Zoomifier do
         image.columns.should <= 256
       end
     end
+
+    it "should not recreate the tiles if the image date precedes them" do
+      timestamps = {}
+      ['/ImageProperties.xml', '/TileGroup0/*.jpg'].each do |pattern|
+        Dir.glob(@output + pattern) do |filename|
+          timestamps[filename] = File.mtime(filename)
+        end
+      end
+      sleep(1)
+      Zoomifier::zoomify(@input)
+      new_timestamps = {}
+      ['/ImageProperties.xml', '/TileGroup0/*.jpg'].each do |pattern|
+        Dir.glob(@output + pattern) do |filename|
+          new_timestamps[filename] = File.mtime(filename)
+        end
+      end
+      timestamps.should == new_timestamps
+    end
   end
 
   describe "On a 2973x2159 JPEG file" do
