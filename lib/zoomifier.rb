@@ -7,7 +7,6 @@ require 'rmagick'
 # See http://zoomify.com/ for more details.
 #
 # @author Donald A. Ball Jr. <donald.ball@gmail.com>
-# @version 1.2
 # @copyright (C) 2008 Donald A. Ball Jr.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
