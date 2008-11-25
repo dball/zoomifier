@@ -45,21 +45,21 @@ describe Zoomifier do
     end
 
     it "should not recreate the tiles if the image date precedes them" do
+      old_timestamps = timestamps(@output)
+      sleep(1)
+      Zoomifier::zoomify(@input)
+      new_timestamps = timestamps(@output)
+      old_timestamps.should == new_timestamps
+    end
+
+    def timestamps(dir)
       timestamps = {}
       ['/ImageProperties.xml', '/TileGroup0/*.jpg'].each do |pattern|
-        Dir.glob(@output + pattern) do |filename|
+        Dir.glob(dir + pattern) do |filename|
           timestamps[filename] = File.mtime(filename)
         end
       end
-      sleep(1)
-      Zoomifier::zoomify(@input)
-      new_timestamps = {}
-      ['/ImageProperties.xml', '/TileGroup0/*.jpg'].each do |pattern|
-        Dir.glob(@output + pattern) do |filename|
-          new_timestamps[filename] = File.mtime(filename)
-        end
-      end
-      timestamps.should == new_timestamps
+      timestamps
     end
   end
 
