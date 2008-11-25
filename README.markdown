@@ -1,6 +1,6 @@
 Zoomifier
 =========
-_Version 1.3 (November 24, 2008)_
+__Version:__ 1.3 (November 24, 2008)
 
 __Authors:__  [Donald Ball](mailto:donald.ball@gmail.com)
 
