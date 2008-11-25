@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'zoomifier'
-  s.version = '1.2'
+  s.version = '1.3'
   s.author = 'Donald Ball'
   s.date = '2008-11-21'
   s.email = 'donald.ball@gmail.com'
@@ -12,6 +12,6 @@ Gem::Specification.new do |s|
   s.executables = ['zoomify']
   s.default_executable = 'zoomify'
   s.has_rdoc = true
-  s.extra_rdoc_files = ['README.txt']
+  s.extra_rdoc_files = ['README.markdown']
   s.add_dependency('rmagick')
 end
